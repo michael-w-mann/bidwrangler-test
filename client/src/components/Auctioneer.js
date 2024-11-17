@@ -104,9 +104,16 @@ function Auctioneer() {
 
       {item && (
         <div className="border p-4 rounded">
-          <h3 className="text-xl font-bold mb-2">{item.name}</h3>
-          <p className="text-lg mb-4">Current Price: ${item.current_price}</p>
+        <h3 className="text-xl font-bold mb-2">{item.name}</h3>
+        <p className="text-lg mb-4">
+          Current Price: ${item.current_price}
+          {item.bids && item.bids.length > 0 && ` - ${item.bids[0].bidder_name}`}
+        </p>
+
+{/* // commented out below is displayed bid history log*/}
           <div className="space-y-2">
+            <h4 className="font-bold">Bid History:</h4>
+
             {item.bids?.map((bid, index) => (
               <div key={index} className="flex justify-between border-b py-2">
                 <span>{bid.bidder_name}</span>

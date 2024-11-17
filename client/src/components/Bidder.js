@@ -86,7 +86,10 @@ function Bidder({ bidderName }) {
       {item && (
         <div className="border p-4 rounded mb-6">
           <h3 className="text-xl font-bold mb-2">{item.name}</h3>
-          <p className="text-lg mb-4">Current Price: ${item.current_price}</p>
+            <p className="text-lg mb-4">
+            Current Price: ${item.current_price}
+            {item.bids && item.bids.length > 0 && ` - ${item.bids[0].bidder_name}`}
+            </p>
           
           <form onSubmit={handleSubmit} className="mb-4">
             <div className="mb-4">
@@ -103,8 +106,9 @@ function Bidder({ bidderName }) {
               Place Bid
             </button>
           </form>
-
-          <div className="space-y-2">
+    
+{/* // commented out below is displayed bid history log*/}
+          {/* <div className="space-y-2">
             <h4 className="font-bold">Bid History:</h4>
             {item.bids?.map((bid, index) => (
               <div key={index} className="flex justify-between border-b py-2">
@@ -112,7 +116,7 @@ function Bidder({ bidderName }) {
                 <span>${bid.amount}</span>
               </div>
             ))}
-          </div>
+          </div> */}
         </div>
       )}
     </div>
