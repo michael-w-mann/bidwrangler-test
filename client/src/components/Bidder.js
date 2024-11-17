@@ -9,16 +9,16 @@ function Bidder({ bidderName }) {
     // Subscribe to auction updates
     const subscription = cable.subscriptions.create('AuctionChannel', {
       received: (data) => {
-        console.log('Received WebSocket data:', data); // Add this for debugging
+        console.log('Received WebSocket data:', data); // Added these console logs for debugging
         if (data.item) {
           setItem(data.item);
         }
       },
       connected: () => {
-        console.log('Connected to WebSocket'); // Add this for debugging
+        console.log('Connected to WebSocket');
       },
       disconnected: () => {
-        console.log('Disconnected from WebSocket'); // Add this for debugging
+        console.log('Disconnected from WebSocket');
       }
     });
 

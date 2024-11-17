@@ -111,7 +111,7 @@ function Auctioneer() {
         </p>
 
 {/* // commented out below is displayed bid history log*/}
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <h4 className="font-bold">Bid History:</h4>
 
             {item.bids?.map((bid, index) => (
@@ -120,7 +120,7 @@ function Auctioneer() {
                 <span>${bid.amount}</span>
               </div>
             ))}
-          </div>
+          </div> */}
         </div>
       )}
     </div>
