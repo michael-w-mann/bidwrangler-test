@@ -4,14 +4,34 @@ import { cable } from '../utils/cable';
 function Bidder({ bidderName }) {
   const [item, setItem] = useState(null);
   const [bidAmount, setBidAmount] = useState('');
+  const [wasOutbid, setWasOutbid] = useState(false);
 
   useEffect(() => {
+    let previousHighestBidder = null;
+  
     // Subscribe to auction updates
     const subscription = cable.subscriptions.create('AuctionChannel', {
       received: (data) => {
-        console.log('Received WebSocket data:', data); // Added these console logs for debugging
+        console.log('Received WebSocket data:', data);
         if (data.item) {
-          setItem(data.item);
+          setItem(prevItem => {
+            // Get the previous highest bidder before updating
+            previousHighestBidder = prevItem?.bids?.[0]?.bidder_name;
+            
+            console.log('Previous highest bidder:', previousHighestBidder);
+            console.log('Current bidder:', bidderName);
+            console.log('New highest bidder:', data.item.bids?.[0]?.bidder_name);
+  
+            // Check if this bidder was outbid
+            if (previousHighestBidder === bidderName && 
+                data.item.bids?.[0]?.bidder_name !== bidderName) {
+              console.log(`${bidderName} was outbid!`);
+              setWasOutbid(true);
+            //   setTimeout(() => setWasOutbid(false), 5000);
+            }
+  
+            return data.item;
+          });
         }
       },
       connected: () => {
@@ -22,34 +42,34 @@ function Bidder({ bidderName }) {
       }
     });
 
-     // Initial fetch
-  const fetchItem = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/api/v1/item', {
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
+    // Initial fetch
+    const fetchItem = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/v1/item', {
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        });
+        const data = await response.json();
+        if (data.item) {
+          setItem(data.item);
         }
-      });
-      const data = await response.json();
-      if (data.item) {
-        setItem(data.item);
+      } catch (error) {
+        console.error('Error fetching item:', error);
       }
-    } catch (error) {
-      console.error('Error fetching item:', error);
-    }
-  };
+    };
 
-  fetchItem();
+    fetchItem();
 
-  // Cleanup subscription
-  return () => {
-    if (subscription) {
-      subscription.unsubscribe();
-    }
-  };
-}, []);
+    // Cleanup subscription
+    return () => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+    };
+  }, [bidderName]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -74,6 +94,7 @@ function Bidder({ bidderName }) {
       }
       
       setBidAmount('');
+      setWasOutbid(false); // Reset outbid status when placing a new bid
     } catch (error) {
       console.error('Error:', error);
     }
@@ -83,13 +104,20 @@ function Bidder({ bidderName }) {
     <div className="max-w-2xl mx-auto">
       <h2 className="text-2xl font-bold mb-4">{bidderName}</h2>
       
+      {wasOutbid && (
+        <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative mb-4" role="alert">
+          <strong className="font-bold">You've been outbid! </strong>
+          <span className="block sm:inline">Place a higher bid to get back in the lead!</span>
+        </div>
+      )}
+
       {item && (
         <div className="border p-4 rounded mb-6">
           <h3 className="text-xl font-bold mb-2">{item.name}</h3>
-            <p className="text-lg mb-4">
+          <p className="text-lg mb-4">
             Current Price: ${item.current_price}
             {item.bids && item.bids.length > 0 && ` - ${item.bids[0].bidder_name}`}
-            </p>
+          </p>
           
           <form onSubmit={handleSubmit} className="mb-4">
             <div className="mb-4">
@@ -106,19 +134,9 @@ function Bidder({ bidderName }) {
               Place Bid
             </button>
           </form>
-    
-{/* // commented out below is displayed bid history log*/}
-          {/* <div className="space-y-2">
-            <h4 className="font-bold">Bid History:</h4>
-            {item.bids?.map((bid, index) => (
-              <div key={index} className="flex justify-between border-b py-2">
-                <span>{bid.bidder_name}</span>
-                <span>${bid.amount}</span>
-              </div>
-            ))}
-          </div> */}
         </div>
       )}
+      
     </div>
   );
 }
