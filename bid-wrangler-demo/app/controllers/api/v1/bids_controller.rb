@@ -7,7 +7,7 @@ class Api::V1::BidsController < ApplicationController
         # Update item's current price
         @item.update(current_price: @bid.amount)
         
-        # Broadcast the update to all clients (we'll set up Action Cable next)
+        # Broadcast the update with more detailed data
         ActionCable.server.broadcast 'auction_channel', {
           item: {
             id: @item.id,
@@ -22,7 +22,20 @@ class Api::V1::BidsController < ApplicationController
           }
         }
         
-        render json: @bid, status: :created
+        render json: {
+          bid: @bid,
+          item: {
+            id: @item.id,
+            name: @item.name,
+            current_price: @item.current_price,
+            bids: @item.bids.order(amount: :desc).map { |bid|
+              {
+                amount: bid.amount,
+                bidder_name: bid.bidder_name
+              }
+            }
+          }
+        }, status: :created
       else
         render json: @bid.errors, status: :unprocessable_entity
       end
