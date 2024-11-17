@@ -1,0 +1,28 @@
+# Rails
+/bid-wrangler-demo/.bundle
+/bid-wrangler-demo/log/*
+/bid-wrangler-demo/tmp/*
+/bid-wrangler-demo/storage/*
+/bid-wrangler-demo/config/master.key
+/bid-wrangler-demo/config/credentials.yml.enc
+/bid-wrangler-demo/.env
+
+# React
+/client/node_modules
+/client/.pnp
+/client/.pnp.js
+/client/coverage
+/client/build
+/client/.env
+/client/.DS_Store
+/client/.env.local
+/client/.env.development.local
+/client/.env.test.local
+/client/.env.production.local
+/client/npm-debug.log*
+/client/yarn-debug.log*
+/client/yarn-error.log*
+
+# General
+.DS_Store
+.env
