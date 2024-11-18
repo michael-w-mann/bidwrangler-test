@@ -28,8 +28,8 @@ A real-time auction platform built with React and Ruby on Rails, featuring WebSo
 ### 1. Clone the Repository
 
 ```bash
-git clone [your-repository-url]
-cd [repository-name]
+git clone https://github.com/michael-w-mann/bidwrangler-test.git
+cd bidwrangler-test
 ```
 
 ### 2. Backend Setup
