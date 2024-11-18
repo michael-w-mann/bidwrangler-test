@@ -1,5 +1,7 @@
 # BidWrangler Auction Platform Demo
 
+![BidWrangler Logo](/client/src/images/logo2.png)
+
 ## Overview
 
 A real-time auction platform built with React and Ruby on Rails, featuring WebSocket communication for instant updates across multiple bidders.
