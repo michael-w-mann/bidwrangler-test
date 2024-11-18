@@ -2,59 +2,34 @@ import React, { useState, useEffect } from 'react';
 import { cable } from '../utils/cable';
 
 function Auctioneer() {
-  const [item, setItem] = useState(null);
+  const [items, setItems] = useState([]);
   const [newItem, setNewItem] = useState({ name: '', starting_price: '' });
 
   useEffect(() => {
-    // Subscribe to auction updates
     const subscription = cable.subscriptions.create('AuctionChannel', {
       received: (data) => {
-        console.log('Received WebSocket data:', data); // Add this for debugging
-        if (data.item) {
-          setItem(data.item);
+        if (data.type === 'NEW_ITEM') {
+          setItems(prevItems => [data.item, ...prevItems]);
+        } else if (data.type === 'BID_UPDATE') {
+          setItems(prevItems => prevItems.map(item => 
+            item.id === data.item.id ? data.item : item
+          ));
         }
-      },
-      connected: () => {
-        console.log('Connected to WebSocket'); // Add this for debugging
-      },
-      disconnected: () => {
-        console.log('Disconnected from WebSocket'); // Add this for debugging
       }
     });
 
-    // Initial fetch
-    const fetchItem = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/api/v1/item', {
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
-      });
-      const data = await response.json();
-      if (data.item) {
-        setItem(data.item);
-      }
-    } catch (error) {
-      console.error('Error fetching item:', error);
-    }
-  };
+    // Fetch existing items
+    fetch('http://localhost:3000/api/v1/items')
+      .then(res => res.json())
+      .then(data => setItems(data.items));
 
-  fetchItem();
-
-  // Cleanup subscription
-  return () => {
-    if (subscription) {
-      subscription.unsubscribe();
-    }
-  };
-}, []);
+    return () => subscription.unsubscribe();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:3000/api/v1/item', {
+      const response = await fetch('http://localhost:3000/api/v1/items', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -66,9 +41,9 @@ function Auctioneer() {
           }
         })
       });
-      const data = await response.json();
-      setItem(data);
-      setNewItem({ name: '', starting_price: '' });
+      if (response.ok) {
+        setNewItem({ name: '', starting_price: '' });
+      }
     } catch (error) {
       console.error('Error:', error);
     }
@@ -102,27 +77,28 @@ function Auctioneer() {
         </button>
       </form>
 
-      {item && (
-        <div className="border p-4 rounded">
-        <h3 className="text-xl font-bold mb-2">{item.name}</h3>
-        <p className="text-lg mb-4">
-          Current Price: ${item.current_price}
-          {item.bids && item.bids.length > 0 && ` - ${item.bids[0].bidder_name}`}
-        </p>
+      <div className="space-y-4">
+        {items.map(item => (
+          <div key={item.id} className="border p-4 rounded">
+            <h3 className="text-xl font-bold mb-2">{item.name}</h3>
+            <p className="text-lg mb-4">
+              Current Price: ${item.current_price}
+              {item.bids && item.bids.length > 0 && ` - ${item.bids[0].bidder_name}`}
+            </p>
 
-{/* // commented out below is displayed bid history log*/}
-          {/* <div className="space-y-2">
+            {/* commented out below is bid history */}
+            {/* <div className="space-y-2">
             <h4 className="font-bold">Bid History:</h4>
-
-            {item.bids?.map((bid, index) => (
-              <div key={index} className="flex justify-between border-b py-2">
-                <span>{bid.bidder_name}</span>
-                <span>${bid.amount}</span>
-              </div>
-            ))}
-          </div> */}
-        </div>
-      )}
+              {item.bids?.map((bid, index) => (
+                <div key={index} className="flex justify-between border-b py-2">
+                  <span>{bid.bidder_name}</span>
+                  <span>${bid.amount}</span>
+                </div>
+              ))}
+            </div> */}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
