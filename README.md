@@ -80,7 +80,7 @@ Open three separate browser tabs, all with the url http://localhost:3001
 Auctioneer tab users should be able to:
 - create new auction items, which all bidders should see them immediately
 - monitor all bids in real-time
-- see who is the current top bidders on items
+- see who is the current top bidders on each item
 
 *BONUS: I added a bid history tracker in the auctioneer tab, but I commented it out in case ya'll didn't want that
 
@@ -101,8 +101,6 @@ Bidder tab users should be able to:
 ### Frontend (React)
 - React Hooks for state management
 - WebSocket integration using Action Cable
-- Real-time updates across components
-- Responsive design with Tailwind CSS
 
 ## 
 
