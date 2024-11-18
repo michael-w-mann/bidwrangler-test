@@ -8,60 +8,60 @@ function Bidder({ bidderName }) {
 
   useEffect(() => {
     let previousHighestBidder = null;
-  
+
     // Subscribe to auction updates
     const subscription = cable.subscriptions.create('AuctionChannel', {
       received: (data) => {
         console.log('Received WebSocket data:', data);
         if (data.item) {
           setItem(prevItem => {
-            // Get the previous highest bidder before updating
+            // For new items, prevItem will be null
+            if (!prevItem) {
+              console.log('New item created:', data.item.name);
+              return data.item;
+            }
+
+            // For existing items, check for outbid
             previousHighestBidder = prevItem?.bids?.[0]?.bidder_name;
-            
             console.log('Previous highest bidder:', previousHighestBidder);
             console.log('Current bidder:', bidderName);
             console.log('New highest bidder:', data.item.bids?.[0]?.bidder_name);
-  
-            // Check if this bidder was outbid
+
+            // check to see if the previous bidder was outbid
             if (previousHighestBidder === bidderName && 
                 data.item.bids?.[0]?.bidder_name !== bidderName) {
               console.log(`${bidderName} was outbid!`);
               setWasOutbid(true);
             //   setTimeout(() => setWasOutbid(false), 5000);
             }
-  
+
             return data.item;
           });
         }
       },
       connected: () => {
         console.log('Connected to WebSocket');
-      },
-      disconnected: () => {
-        console.log('Disconnected from WebSocket');
-      }
-    });
-
-    // Initial fetch
-    const fetchItem = async () => {
-      try {
-        const response = await fetch('http://localhost:3000/api/v1/item', {
+        // Initial fetch when connected
+        fetch('http://localhost:3000/api/v1/item', {
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
           }
-        });
-        const data = await response.json();
-        if (data.item) {
-          setItem(data.item);
-        }
-      } catch (error) {
-        console.error('Error fetching item:', error);
+        })
+        .then(res => {
+          if (res.ok) return res.json();
+          console.log('No item yet');
+        })
+        .then(data => {
+          if (data?.item) setItem(data.item);
+        })
+        .catch(error => console.error('Error:', error));
+      },
+      disconnected: () => {
+        console.log('Disconnected from WebSocket');
       }
-    };
-
-    fetchItem();
+    });
 
     // Cleanup subscription
     return () => {
@@ -69,7 +69,7 @@ function Bidder({ bidderName }) {
         subscription.unsubscribe();
       }
     };
-  }, [bidderName]);
+  }, [bidderName]); //useEffect dependency array
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -111,7 +111,7 @@ function Bidder({ bidderName }) {
         </div>
       )}
 
-      {item && (
+      {item ? (
         <div className="border p-4 rounded mb-6">
           <h3 className="text-xl font-bold mb-2">{item.name}</h3>
           <p className="text-lg mb-4">
@@ -135,8 +135,11 @@ function Bidder({ bidderName }) {
             </button>
           </form>
         </div>
+      ) : (
+        <div className="border p-4 rounded mb-6 bg-gray-50">
+          <p className="text-gray-600">Waiting for an item...</p>
+        </div>
       )}
-      
     </div>
   );
 }

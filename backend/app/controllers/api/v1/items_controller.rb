@@ -23,6 +23,15 @@ class Api::V1::ItemsController < ApplicationController
     def create
       @item = Item.new(item_params)
       if @item.save
+        # Broadcast the new item creation
+        ActionCable.server.broadcast 'auction_channel', {
+          item: {
+            id: @item.id,
+            name: @item.name,
+            current_price: @item.current_price,
+            bids: []
+          }
+        }
         render json: @item, status: :created
       else
         render json: @item.errors, status: :unprocessable_entity
