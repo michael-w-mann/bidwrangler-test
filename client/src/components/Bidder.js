@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { cable } from '../utils/cable';
+import '../styles.css'
 
 function Bidder({ bidderName }) {
   const [items, setItems] = useState([]);
@@ -113,63 +114,42 @@ function Bidder({ bidderName }) {
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4">{bidderName}</h2>
-
-      {items.length === 0 ? (
-        <div className="border p-4 rounded mb-6 bg-gray-50">
-          <p className="text-gray-600">Waiting for items...</p>
-        </div>
-      ) : (
-        <div className="space-y-6">
-          {items.map(item => (
-            <div key={item.id} className="border p-4 rounded">
-              {outbidItems[item.id] && (
-                <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative mb-4" role="alert">
-                  <strong className="font-bold">You've been outbid on {item.name}! </strong>
-                  <span className="block sm:inline">Place a higher bid to get back in the lead!</span>
-                </div>
-              )}
-
-              <h3 className="text-xl font-bold mb-2">{item.name}</h3>
-              <p className="text-lg mb-4">
+    <div className="container">
+      <div className="box">
+        <h2>{bidderName}</h2>
+      </div>
+  
+      <div className="grid">
+        {items.map(item => (
+          <div key={item.id} className="box">
+            {outbidItems[item.id] && (
+              <div className="alert">
+                You've been outbid on {item.name}! Place another bid to get back on top
+              </div>
+            )}
+            
+            <h3>{item.name}</h3>
+            <p>
                 Current Price: ${item.current_price}
                 {item.bids && item.bids.length > 0 && ` - ${item.bids[0].bidder_name}`}
-              </p>
-              
-              <form onSubmit={(e) => handleBidSubmit(e, item.id)} className="mb-4">
-                <div className="mb-4">
-                  <label className="block mb-2">Your Bid:</label>
-                  <input
-                    type="number"
-                    value={bidAmounts[item.id] || ''}
-                    onChange={(e) => setBidAmounts(prev => ({
-                      ...prev,
-                      [item.id]: e.target.value
-                    }))}
-                    className="w-full p-2 border rounded"
-                    step="0.01"
-                  />
-                </div>
-                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
-                  Place Bid
-                </button>
-              </form>
-
-            {/* commented out below is bid history */}
-            {/* <div className="space-y-2">
-                <h4 className="font-bold">Bid History:</h4>
-                {item.bids?.map((bid, index) => (
-                <div key={index} className="flex justify-between border-b py-2">
-                    <span>{bid.bidder_name}</span>
-                    <span>${bid.amount}</span>
-                </div>
-                ))}
-              </div> */}
-            </div>
-          ))}
-        </div>
-      )}
+            </p>
+            
+            <form onSubmit={(e) => handleBidSubmit(e, item.id)}>
+              <input
+                className="input"
+                type="number"
+                value={bidAmounts[item.id] || ''}
+                onChange={(e) => setBidAmounts(prev => ({
+                  ...prev,
+                  [item.id]: e.target.value
+                }))}
+                placeholder="Enter bid amount"
+              />
+              <button className="button">Place Bid</button>
+            </form>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

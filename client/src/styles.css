@@ -1,0 +1,45 @@
+/* styles.css */
+
+/* Basic container */
+.container {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+  }
+  
+  /* Simple box outline */
+  .box {
+    border: 2px solid black;
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  
+  /* Basic grid for items */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+  
+  /* Simple form styling */
+  .input {
+    width: 100%;
+    padding: 5px;
+    margin: 5px 0;
+    border: 1px solid black;
+  }
+  
+  /* Basic orange button */
+  .button {
+    background-color: orange;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+  }
+  
+  /* Basic alert box */
+  .alert {
+    border: 2px solid orange;
+    padding: 10px;
+    margin: 10px 0;
+  }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { cable } from '../utils/cable';
+import '../styles.css'
 
 function Auctioneer() {
   const [items, setItems] = useState([]);
@@ -50,55 +51,54 @@ function Auctioneer() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Auctioneer Dashboard</h2>
-      
-      <form onSubmit={handleSubmit} className="mb-6">
-        <div className="mb-4">
-          <label className="block mb-2">Item Name:</label>
-          <input
-            type="text"
-            value={newItem.name}
-            onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
-            className="w-full p-2 border rounded"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2">Starting Price:</label>
-          <input
-            type="number"
-            value={newItem.starting_price}
-            onChange={(e) => setNewItem({ ...newItem, starting_price: e.target.value })}
-            className="w-full p-2 border rounded"
-          />
-        </div>
-        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
-          Create Auction
-        </button>
-      </form>
-
-      <div className="space-y-4">
+    <div className="container">
+      <div className="box">
+        <h2>Auctioneer Dashboard</h2>
+        
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label>Item Name:</label>
+            <input
+              className="input"
+              type="text"
+              value={newItem.name}
+              onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+            />
+          </div>
+          <div>
+            <label>Starting Price:</label>
+            <input
+              className="input"
+              type="number"
+              value={newItem.starting_price}
+              onChange={(e) => setNewItem({ ...newItem, starting_price: e.target.value })}
+            />
+          </div>
+          <button className="button">Create Auction</button>
+        </form>
+      </div>
+  
+      <div className="grid">
         {items.map(item => (
-          <div key={item.id} className="border p-4 rounded">
-            <h3 className="text-xl font-bold mb-2">{item.name}</h3>
-            <p className="text-lg mb-4">
-              Current Price: ${item.current_price}
-              {item.bids && item.bids.length > 0 && ` - ${item.bids[0].bidder_name}`}
+          <div key={item.id} className="box">
+            <h3>{item.name}</h3>
+            <p>
+                Current Price: ${item.current_price}
+                {item.bids && item.bids.length > 0 && ` - ${item.bids[0].bidder_name}`}
             </p>
-
-            {/* commented out below is bid history */}
-            {/* <div className="space-y-2">
-            <h4 className="font-bold">Bid History:</h4>
-              {item.bids?.map((bid, index) => (
-                <div key={index} className="flex justify-between border-b py-2">
-                  <span>{bid.bidder_name}</span>
-                  <span>${bid.amount}</span>
-                </div>
-              ))}
-            </div> */}
           </div>
         ))}
       </div>
+      {/* commented out below is bid history */}
+            {/* <div className="space-y-2">
+                <h4 className="font-bold">Bid History:</h4>
+                {item.bids?.map((bid, index) => (
+                <div key={index} className="flex justify-between border-b py-2">
+                    <span>{bid.bidder_name}</span>
+                    <span>${bid.amount}</span>
+                </div>
+                ))}
+              </div> */}
     </div>
   );
 }
