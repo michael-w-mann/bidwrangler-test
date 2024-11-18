@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { cable } from '../utils/cable';
-import '../index.css'
+import '../index.css';
+import logo1 from '../images/logo1.png';
+
 
 function Bidder({ bidderName }) {
   const [items, setItems] = useState([]);
@@ -114,9 +116,10 @@ function Bidder({ bidderName }) {
   };
 
   return (
-    <div className="container">
-      <div className="box">
+    <div className="box">
+      <div className="header">
         <h2>{bidderName}</h2>
+        <img src={logo1} alt="Logo" className="header-logo" />
       </div>
   
       <div className="grid">

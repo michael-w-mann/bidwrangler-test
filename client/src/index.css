@@ -96,3 +96,31 @@ label {
 form > div {
   margin-bottom: 15px;
 }
+
+.banner {
+  width: 100%;
+  background: white;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.logo {
+  height: 100px; /* Adjust based on your logo size */
+  width: auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.header-logo {
+  height: 60px; /* Adjust to match your h2 height */
+  width: auto;
+}

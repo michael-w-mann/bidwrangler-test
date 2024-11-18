@@ -2,12 +2,17 @@ import React from 'react';
 import { useState } from 'react';
 import Auctioneer from './components/Auctioneer';
 import Bidder from './components/Bidder';
+import logo2 from './images/logo2.png';
+
 
 function App() {
   const [view, setView] = useState('auctioneer');
 
   return (
     <div className="container mx-auto p-4">
+      <div className="banner">
+        <img src={logo2} alt="Logo 2" className="logo" />
+      </div>
       <div className="mb-4">
         <button 
           onClick={() => setView('auctioneer')}

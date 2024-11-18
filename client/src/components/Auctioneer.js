@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { cable } from '../utils/cable';
-// import '../styles.css'
 import '../index.css'
+import logo1 from '../images/logo1.png';
 
 function Auctioneer() {
   const [items, setItems] = useState([]);
@@ -54,8 +54,10 @@ function Auctioneer() {
   return (
     <div className="container">
       <div className="box">
-        <h2>Auctioneer Dashboard</h2>
-        
+        <div className="header">
+          <h2>Auctioneer Dashboard</h2>
+          <img src={logo1} alt="Logo" className="header-logo" />
+        </div>
         <form onSubmit={handleSubmit}>
           <div>
             <label>Item Name:</label>
