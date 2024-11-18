@@ -22,8 +22,8 @@ function Auctioneer() {
       }
     });
 
-     // Initial fetch
-  const fetchItem = async () => {
+    // Initial fetch
+    const fetchItem = async () => {
     try {
       const response = await fetch('http://localhost:3000/api/v1/item', {
         credentials: 'include',
