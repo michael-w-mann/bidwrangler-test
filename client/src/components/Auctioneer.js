@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { cable } from '../utils/cable';
-import '../styles.css'
+// import '../styles.css'
+import '../index.css'
 
 function Auctioneer() {
   const [items, setItems] = useState([]);

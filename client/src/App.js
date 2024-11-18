@@ -2,7 +2,6 @@ import React from 'react';
 import { useState } from 'react';
 import Auctioneer from './components/Auctioneer';
 import Bidder from './components/Bidder';
-import './App.css';
 
 function App() {
   const [view, setView] = useState('auctioneer');
